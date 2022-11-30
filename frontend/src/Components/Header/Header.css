@@ -116,6 +116,11 @@
   text-decoration: none;
 }
 
+.loginPage span{
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .sellMenu {
   position: relative;
   cursor: pointer;

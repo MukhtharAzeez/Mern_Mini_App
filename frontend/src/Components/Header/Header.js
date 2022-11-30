@@ -5,11 +5,11 @@ import OlxLogo from '../../assets/OlxLogo';
 import Search from '../../assets/Search';
 import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
-import SellButtonPlus from '../../assets/SellButtonPlus';
-import {userContext} from '../../contexts/userContext'
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
-  const userName =  useContext(userContext)
+  const navigate = useNavigate();
+  
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
@@ -37,15 +37,14 @@ function Header() {
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <span>{userName}</span>
+          <span onClick={()=>navigate('/login')}>Login</span>
           <hr />
         </div>
 
         <div className="sellMenu">
           <SellButton></SellButton>
           <div className="sellMenuContent">
-            <SellButtonPlus></SellButtonPlus>
-            <span>SELL</span>
+          <span onClick={()=>navigate('/profile')}>Profile</span>
           </div>
         </div>
       </div>

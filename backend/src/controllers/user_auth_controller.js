@@ -28,10 +28,14 @@ module.exports = {
                     return res.send({userSignup:false})
                 }
                 if(data){
-                    const token = jwt.sign({_id : data._id},process.env.JWT_SECRET,{expiresIn : 60});
-                    req.session.token = token
+                    const token = jwt.sign({data},process.env.JWT_SECRET,{expiresIn : 500});
+                    
+                    return res.cookie("jwt", token, {
+                        httpOnly: false,
+                        maxAge: 60*1000,
+                    }).status(200).send({ auth: true, token: token, user: data.userName });
 
-                    return res.send({userSignup:true})
+                    
                 }
             })
     
@@ -52,10 +56,13 @@ module.exports = {
             if(data){
 
                 if(data.authenticate(req.body.password)){
-                    const token = jwt.sign({_id : data._id},process.env.JWT_SECRET,{expiresIn : 60});
-                    // res.setHeader('authorization', 'Bearer ' + token);
-                    req.session.token = token
-                    return res.send({userLogin : true,user : data.userName})
+                    const token = jwt.sign({data},process.env.JWT_SECRET,{expiresIn : 500});
+                    
+                    return res.cookie("jwt", token, {
+                        httpOnly: false,
+                        maxAge: 60*1000,
+                    }).status(200).send({ auth: true, token: token, user: data.userName });
+
                 }else{
                     return res.send({userLogin : false,message : 'Password is invalid'})
                 }
@@ -69,6 +76,13 @@ module.exports = {
     getHome : (req,res)=>{
         return res.status(200).json({
             message : 'User Home'
+        })
+    },
+    getUserProfile : async(req,res)=>{
+        const jwtToken = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET)
+        userId = jwtToken.data._id;
+        userSchema.findOne({ _id: userId }).then((data) => {
+            res.status(200).send(data)
         })
     }
 }

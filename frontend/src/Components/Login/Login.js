@@ -1,33 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from '../../olx-logo.png';
 import './Login.css';
 import Axios from 'axios';
 import {user} from '../../api/api'
-import { useHistory } from 'react-router-dom';
-import {userContext} from '../../contexts/userContext'
+import { Link, useNavigate } from 'react-router-dom';
+import {useCookies} from 'react-cookie'
 
 function Login() {
+  const [cookies, setCookie] = useCookies(['jwt']);
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
-  const [userName,setUserName] = useState('');
   const [error,setError] = useState('');
-  const history=useHistory();
+  const navigate = useNavigate()
+  useEffect(() => {
+    if(cookies.jwt){
+      navigate('/')
+    }
+  }, [])
+
   const login=(e)=>{
     e.preventDefault();
-    Axios.post(`${user}/login`,{email,password}).then((response)=>{
+    Axios.post(`${user}/login`,{email,password},{ withCredentials: true }).then((response)=>{
       console.log(response)
-      if(response.data.userLogin){
-        setUserName(response.data.user)
-        history.push('/')
+      if(response.data.auth){
+        navigate('/')
       }else{
         setError(response.data.message)
       }
     })
   }
 
+
+
   return (
     <div>
-      <userContext.Provider value={{data : userName}}>
       <div className="loginParentDiv">
         <img width="200px" height="200px" src={Logo} alt=""></img>
       <p className='text-center pt-5 text-danger'>{error}</p>
@@ -62,9 +68,8 @@ function Login() {
           <br />
           <button onClick={login}>Login</button>
         </form>
-        <a>Signup</a>
+        <Link id='link' to="/signup">Signup</Link>
       </div>
-      </userContext.Provider>
     </div>
   );
 }

@@ -1,27 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import Logo from "../../olx-logo.png";
 import "./Signup.css";
 import Axios from 'axios'
 import {user} from '../../api/api'
-import { useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {useCookies} from 'react-cookie'
+
 
 
 export default function Signup() {
+  const [cookies, setCookie] = useCookies(['jwt']);
   const [firstName,setFirstName] = useState('');
   const [lastName,setLastName] = useState('');
   const [email,setEmail] = useState('');
   const [phone,setPhone] = useState('');
   const [password,setPassword] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate()
+
+
   
   const signup = (e)=>{
     e.preventDefault();
     Axios.post(`${user}/signup`,{firstName,lastName,email,phone,password}).then((response)=>{
-      if(response.data.userSignup){
-        history.push('/login')
+      if(response.data.auth){
+        navigate('/')
       }
     })
   }
+
+
+  useEffect(() => {
+    if(cookies.jwt){
+        navigate('/')
+    }
+  }, [])
+
+
   return (
     <div>
       <div className="signupParentDiv">
@@ -95,7 +109,7 @@ export default function Signup() {
           <br />
           <button onClick={signup}>Signup</button>
         </form>
-        <a>Login</a>
+        <Link id='link' to="/login">Login</Link>
       </div>
     </div>
   );

@@ -14,6 +14,8 @@ router.post('/signup',userController.postSignUp)
 
 router.post('/login',userController.postSignIn)
 
-router.get('/home',userMiddleware.verifyToken,userController.getHome)
+router.get('/home',userController.getHome)
+
+router.get('/userProfile',userMiddleware.verifyToken,userController.getUserProfile)
 
 module.exports = router;

@@ -3,6 +3,7 @@ const env = require('dotenv');
 const db = require('./config/connection')
 const cors = require('cors');
 const session = require('express-session');
+const cookieParser = require('cookie-parser')
 env.config();
 
 
@@ -11,9 +12,17 @@ const userRouter = require('./routes/user')
 
 const app = express();
 
-
+app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000'],
+  methods: ['GET', 'POST'],
+  credentials: true,
+  allowedHeaders: [
+      'Content-Type',
+      'Access'
+  ]
+}))
 
 db.database();
 app.use(session({

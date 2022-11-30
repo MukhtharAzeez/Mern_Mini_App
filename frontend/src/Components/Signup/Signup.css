@@ -35,4 +35,7 @@
     justify-content: center;
     cursor: pointer;
   }
-  
+  #link{
+    text-decoration: none;
+    color: black;
+  }

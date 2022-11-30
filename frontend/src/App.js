@@ -3,30 +3,22 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from './Pages/Home'
 import Signup from './Pages/Signup'
 import Login from './Pages/Login'
+import Profile from './Pages/Profile'
+import EditProfile from './Components/EditProfile/EditProfile';
 
-/**
- * ?  =====Import Components=====
- */
-// import Home from './Pages/Home';
+
 
 function App() {
-  return (
+   return (
     <Router >
-       {/* <Route exact path='/'>
-          <Home/>
-       </Route>
-       <Route path = '/signup'>
-          <Signup/>
-       </Route>
-       <Route path = '/login'>
-          <Login/>
-       </Route> */}
-  <Routes>
-       <Route exact path='/' element={<Home />} />
+      <Routes>
+        <Route exact path='/' element={<Home />} />
         <Route exact path='/login' element={<Login />} />
         <Route exact path='/signup' element={<Signup />} />
-        </Routes>
-        {/* <Route exact path='/signup' element={<Signup />} /> */}
+        <Route exact path='/profile' element={<Profile />} />
+        <Route exact path='/editProfile' element={<EditProfile />} />
+
+      </Routes>
     </Router>
   );
 }
