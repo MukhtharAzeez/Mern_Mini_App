@@ -49,16 +49,17 @@ function EditProfile() {
         console.log(image);
         const formData = new FormData();
         formData.append('file', image);
-        formData.append('upload_preset', 'kmg91lzv');
-        console.log(formData);
+        // formData.append('upload_preset', 'kmg91lzv');
+        console.log(...formData);
         let imageUrl = null
+
         Axios.post(`https://api.cloudinary.com/v1_1/${cloudAPI}/image/upload`, image).then(response => {
             if(response){
                 imageUrl = response.data.secure_url
                 console.log(imageUrl);
-            // Axios.post(`${userAPI}/editProfilePhoto`,{ image: imageUrl },{withCredentials:true}).then((res) => {
-            //     console.log(res.data);
-            // })
+            Axios.post(`${user}/editProfilePhoto`,{ image: imageUrl },{withCredentials:true}).then((res) => {
+                console.log(res.data);
+            })
             }
             
         })

@@ -18,4 +18,6 @@ router.get('/home',userController.getHome)
 
 router.get('/userProfile',userMiddleware.verifyToken,userController.getUserProfile)
 
+router.post('/editProfilePhoto',userMiddleware.verifyToken,userController.postEditProfile)
+
 module.exports = router;

@@ -84,5 +84,24 @@ module.exports = {
         userSchema.findOne({ _id: userId }).then((data) => {
             res.status(200).send(data)
         })
+    },
+    postEditProfile: async (req, res) => {
+        console.log(req.body);
+        const jwtToken = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET)
+        const userId = jwtToken.id
+        let user = await userCollection.findOne({ _id: userId })
+        if (!user) {
+            res.status(500).send({ error: "no user" })
+        } else {
+            userSchema.updateOne(
+                { _id: userId },
+                {
+                    $set: {
+                        image: req.body.image
+                    }
+                }).then(() => {
+                    res.status(200).send({ changed: true })
+                })
+        }
     }
 }

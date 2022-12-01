@@ -48,6 +48,9 @@ const userSchema = new Schema({
    profilePicture : {
     type : String,
    },
+   image :{
+    type : String,
+   }
 },{timestamps : true})
 
 userSchema.virtual('password').set(function(password){
