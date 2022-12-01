@@ -20,4 +20,6 @@ router.get('/userProfile',userMiddleware.verifyToken,userController.getUserProfi
 
 router.post('/editProfilePhoto',userMiddleware.verifyToken,userController.postEditProfile)
 
+router.post('/logout',userController.logout)
+
 module.exports = router;

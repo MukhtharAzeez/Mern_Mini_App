@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Logo from '../../olx-logo.png';
 import './Login.css';
 import Axios from 'axios';
 import {user} from '../../api/api'
 import { Link, useNavigate } from 'react-router-dom';
 import {useCookies} from 'react-cookie'
+import { AuthContext } from '../../contexts/userContext';
 
 function Login() {
   const [cookies, setCookie] = useCookies(['jwt']);
@@ -12,7 +13,10 @@ function Login() {
   const [password,setPassword] = useState('');
   const [error,setError] = useState('');
   const navigate = useNavigate()
+  const {userName,setUserName} = useContext(AuthContext)
+  
   useEffect(() => {
+   
     if(cookies.jwt){
       navigate('/')
     }
@@ -23,6 +27,7 @@ function Login() {
     Axios.post(`${user}/login`,{email,password},{ withCredentials: true }).then((response)=>{
       console.log(response)
       if(response.data.auth){
+        setUserName(response.data.user)
         navigate('/')
       }else{
         setError(response.data.message)

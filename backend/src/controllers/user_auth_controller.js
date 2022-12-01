@@ -103,5 +103,12 @@ module.exports = {
                     res.status(200).send({ changed: true })
                 })
         }
+    },
+    logout : async(req,res)=>{
+        console.log(req.cookies.jwt)
+        res.clearCookie('jwt');
+        console.log(req.cookies.jwt)
+
+        res.status(200).send({status:true})
     }
 }
