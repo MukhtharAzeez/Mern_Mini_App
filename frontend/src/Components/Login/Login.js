@@ -5,6 +5,9 @@ import {user} from '../../api/api'
 import { Link, useNavigate } from 'react-router-dom';
 import {useCookies} from 'react-cookie'
 import { AuthContext } from '../../contexts/userContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUser } from '../../redux-toolkit/user-reducer';
+
 
 function Login() {
   
@@ -14,6 +17,9 @@ function Login() {
   const [error,setError] = useState('');
   const navigate = useNavigate()
   const {setUserId} = useContext(AuthContext)
+  
+  const dispatch = useDispatch();
+ 
   
   useEffect(() => {
    
@@ -28,6 +34,7 @@ function Login() {
     
       if(response.data.auth){
         console.log(response.data.user)
+        dispatch(updateUser({userName : response.data.user}))
         setUserId(response.data.user)
         navigate('/')
       }else{

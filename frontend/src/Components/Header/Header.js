@@ -11,16 +11,23 @@ import {useCookies} from 'react-cookie'
 import Axios from 'axios'
 import {user} from '../../api/api'
 import { AuthContext } from '../../contexts/userContext';
+import { useSelector } from 'react-redux';
 
 
 
 
 function Header() {
   
+  const userName = useSelector((state)=>{
+    return state.user.name;
+  })
+
+  
+
   const [cookies, setCookie] = useCookies(['jwt']);
   const navigate = useNavigate();
   const {userId} = useContext(AuthContext)
-  const [userNames,setUserNames] = useState('') 
+  // const [userNames,setUserNames] = useState('') 
   
   useEffect(()=>{
   })
@@ -65,7 +72,7 @@ function Header() {
         <div className="loginPage">
           <span onClick={()=>navigate('/login')}>{userId ? '': 'Login'}</span>
           <br />
-          <span onClick={logout}>{userId ? 'Logout' : ''}</span>
+          <span onClick={logout}>{userId ? userName : ''}</span>
           <hr />
         </div>
 
