@@ -7,6 +7,6 @@ router.get('/getAllUsers',adminController.getAllUsers)
 router.get('/getUserData',adminController.getUserData)
 router.post('/EditUserData',adminController.EditUserData)
 router.get('/deleteAUser',adminController.deleteAUser)
-
+router.get('/searchUser',adminController.searchUser)
 
 module.exports = router;

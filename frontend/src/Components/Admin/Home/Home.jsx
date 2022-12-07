@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {admin} from '../../../api/api'
 import AdminNavbar from '../NavBar/NavBar'
 import "./Home.css"
@@ -17,6 +17,7 @@ function ViewUser() {
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['adminJwt'])
 
+    const input = useRef();
 
     useEffect(()=>{
         if(!cookies.adminJwt){
@@ -38,6 +39,12 @@ function ViewUser() {
             setUsers(response.data.users)
         })
     }
+
+    const searchUser = (user)=>{
+        Axios.get(`${admin}/searchUser?name=${user}`,{withCredentials : true}).then((response)=>{
+            setUsers(response.data.users)
+        })
+    }
     
     return (
         <>
@@ -45,6 +52,14 @@ function ViewUser() {
             <section className='mt-5 mb-5'>
                 <div className="container">
                     <h1 className='heading'>ALL USERS</h1>
+
+                    <div className="input-group pb-5">
+                        <div className="form-outline">
+                            <input type="search" id="form1" className="form-control"  onChange={(e)=>{searchUser(e.target.value)}} />
+                            
+                        </div>
+                    </div>
+
                     <table className="table">
                         <thead className="thead-dark">
                             <tr>

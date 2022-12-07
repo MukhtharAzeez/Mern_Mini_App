@@ -58,4 +58,13 @@ module.exports = {
             res.status(400).send({error : 'no users'})
         } 
     },
+    searchUser : async(req,res)=>{
+        let users = await userSchema.find({userName: { '$regex': `(\s+${req.query.name}|^${req.query.name})`, '$options': 'i' },role:'user'}, {})
+        if(users[0]){
+            res.send({users:users})
+        }else{
+         users = await userSchema.find({category: { '$regex': `(\s+${req.query.name}|^${req.query.name})`, '$options': 'i' }}, {})
+         res.send({users:users})
+        }  
+    },
 }
