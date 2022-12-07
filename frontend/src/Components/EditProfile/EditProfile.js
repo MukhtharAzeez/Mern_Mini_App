@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 function EditProfile() {
     const [image, setImage] = useState("")
+    const [firstImage,setFirstImage] = useState("")
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['jwt'])
     const [userData, setUserData] = useState({})
@@ -19,17 +20,17 @@ function EditProfile() {
     const [userName,setUserName] = useState(userData.userName);
     
     useEffect(() => {
-        console.log("hdii")
         if (!cookies.jwt) {
             navigate("/login")
         }else{
             Axios.get(`${user}/userProfile`, { withCredentials: true }).then((response) => {
-                const {firstName,lastName,userName,email} = response.data;
-                setUserData({firstName,lastName,userName,email})
+                const {firstName,lastName,userName,email,image} = response.data;
+                setUserData({firstName,lastName,userName,email,image})
                 setFirstName(firstName);
                 setLastName(lastName)
                 setEmail(email)
                 setUserName(userName)
+                setFirstImage(image)
             })
 
         }
@@ -38,27 +39,18 @@ function EditProfile() {
 
     const handleUpdateProfile = (e) => {
         e.preventDefault();
-       
-        const form = {
-            firstName,
-            lastName,
-            userName,
-            email
-        }
-        // console.log(form)
-        console.log(image);
+        
         const formData = new FormData();
         formData.append('file', image);
-        // formData.append('upload_preset', 'kmg91lzv');
-        console.log(...formData);
+        formData.append('upload_preset', 'fetovrfe');
         let imageUrl = null
 
-        Axios.post(`https://api.cloudinary.com/v1_1/${cloudAPI}/image/upload`, image).then(response => {
+        Axios.post(`https://api.cloudinary.com/v1_1/${cloudAPI}/image/upload`, formData).then(response => {
             if(response){
                 imageUrl = response.data.secure_url
-                console.log(imageUrl);
-            Axios.post(`${user}/editProfilePhoto`,{ image: imageUrl },{withCredentials:true}).then((res) => {
+            Axios.post(`${user}/editProfilePhoto`,{ firstName,lastName,email,userName,image: imageUrl },{withCredentials:true}).then((res) => {
                 console.log(res.data);
+                navigate('/profile')
             })
             }
             
@@ -74,10 +66,11 @@ function EditProfile() {
                 <div className="row">
                     <div className="col-md-3">
                         <div className="text-center">
-                            <img src={image ? URL.createObjectURL(image) : "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"} className="avatar img-circle img-thumbnail" alt="avatar" />
+                            <img src={firstImage ? firstImage : image ? URL.createObjectURL(image) : "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"} className="avatar img-circle img-thumbnail" alt="avatar" />
 
                             <input type="file" className="form-control" onChange={(e) => {
                                 setImage(e.target.files[0])
+                                setFirstImage('')
                             }} />
                         </div>
                     </div>

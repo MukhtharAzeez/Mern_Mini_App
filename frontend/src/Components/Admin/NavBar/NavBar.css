@@ -1,0 +1,28 @@
+.brand {
+    padding-left: 15px;
+}
+.profile{
+    margin-left: auto;
+    margin-right: 2rem;
+    margin-top: 1rem;
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+}
+.profile:hover{
+    color: yellow;
+    font-weight: bolder;
+}
+.customNav{
+background-color: rgb(9, 79, 9);
+}
+.barndname{
+    color: #fff;
+}
+.toggleNav{
+    color: #fff;
+    background-color: aquamarine;
+}
+body{
+    margin-top: 0;
+}

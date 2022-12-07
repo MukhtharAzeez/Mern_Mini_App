@@ -20,7 +20,8 @@ export default function Profile() {
         }else{
             Axios.get(`${user}/userProfile`, { withCredentials: true }).then((response) => {
                 const {userName,email} = response.data;
-                setUserData({userName,email})
+                const image = response.data.image
+                setUserData({userName,email,image})
             })
 
         }
@@ -34,10 +35,10 @@ export default function Profile() {
             <MDBCard style={{ borderRadius: '15px' }}>
               <MDBCardBody className="p-4">
                 <div className="d-flex text-black">
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0 mr-5">
                     <MDBCardImage
                       style={{ width: '180px', borderRadius: '10px' }}
-                      src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp'
+                      src={userData.image ? userData.image : 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg'}
                       alt='Generic placeholder image'
                       fluid />
                   </div>

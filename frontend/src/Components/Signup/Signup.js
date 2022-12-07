@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react';
-import Logo from "../../olx-logo.png";
+// import Logo from "../../olx-logo.png";
 import "./Signup.css";
 import Axios from 'axios'
 import {user} from '../../api/api'
@@ -39,7 +39,7 @@ export default function Signup() {
   return (
     <div>
       <div className="signupParentDiv">
-        <img width="250px" height="200px" src={Logo} alt="logo"></img>
+        {/* <img width="250px" height="200px" src={Logo} alt="logo"></img> */}
         <form>
           <label htmlFor="fname">Username</label>
           <br />

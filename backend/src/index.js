@@ -8,7 +8,9 @@ env.config();
 
 
 // Routes
+const adminRouter = require('./routes/admin')
 const userRouter = require('./routes/user')
+
 
 const app = express();
 
@@ -34,7 +36,7 @@ app.use(session({
     resave : true,
   }))
 
-
+app.use('/admin', adminRouter)
 app.use('/',userRouter);
 
 app.listen(process.env.PORT,()=>{

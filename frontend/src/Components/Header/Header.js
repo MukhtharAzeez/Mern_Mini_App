@@ -6,34 +6,29 @@ import Search from '../../assets/Search';
 import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/userContext';
+// import { AuthContext } from '../../contexts/userContext';
 import {useCookies} from 'react-cookie'
 import Axios from 'axios'
 import {user} from '../../api/api'
+import { AuthContext } from '../../contexts/userContext';
 
 
 
 
 function Header() {
+  
   const [cookies, setCookie] = useCookies(['jwt']);
   const navigate = useNavigate();
-  const {userName} = useContext(AuthContext)
+  const {userId} = useContext(AuthContext)
   const [userNames,setUserNames] = useState('') 
+  
   useEffect(()=>{
-    if(userName.length>0 && cookies.jwt){
-      localStorage.setItem('Name',userName)
-      setUserNames(userName)
-    }else if(cookies.jwt){
-      const name = localStorage.getItem('Name')
-      setUserNames(name)
-    }
-    // console.log(userName.length)
   })
 
   const logout =()=>{
-    Axios.post(`${user}/logout`,{},{ withCredentials: true }).then((response)=>{
-      console.log(response)
-      if(cookies.jwt.length>0){
+    Axios.get(`${user}/logout`,{ withCredentials: true }).then((response)=>{
+     
+      if(cookies.jwt){
         console.log("found it")
       }else{
         console.log("yes u r correct")
@@ -68,9 +63,9 @@ function Header() {
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <span onClick={()=>navigate('/login')}>{userNames ? userNames: 'Login'}</span>
+          <span onClick={()=>navigate('/login')}>{userId ? '': 'Login'}</span>
           <br />
-          <span onClick={logout}>{userNames ? 'Logout' : ''}</span>
+          <span onClick={logout}>{userId ? 'Logout' : ''}</span>
           <hr />
         </div>
 

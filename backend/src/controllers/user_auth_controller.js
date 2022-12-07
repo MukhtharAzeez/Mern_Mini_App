@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const userSchema = require('../models/user_schema')
+const productSchema = require('../models/product_schema')
 const jwt = require('jsonwebtoken');
 
 
@@ -28,11 +29,11 @@ module.exports = {
                     return res.send({userSignup:false})
                 }
                 if(data){
-                    const token = jwt.sign({data},process.env.JWT_SECRET,{expiresIn : 500});
+                    const token = jwt.sign({data},process.env.JWT_SECRET,{expiresIn : 600});
                     
                     return res.cookie("jwt", token, {
                         httpOnly: false,
-                        maxAge: 60*1000,
+                        maxAge: 60*1000*10,
                     }).status(200).send({ auth: true, token: token, user: data.userName });
 
                     
@@ -56,12 +57,19 @@ module.exports = {
             if(data){
 
                 if(data.authenticate(req.body.password)){
-                    const token = jwt.sign({data},process.env.JWT_SECRET,{expiresIn : 500});
+                    const token = jwt.sign({data},process.env.JWT_SECRET,{expiresIn : 600});
                     
+                   if(data.role=='user'){
                     return res.cookie("jwt", token, {
                         httpOnly: false,
-                        maxAge: 60*1000,
+                        maxAge: 60*1000*10,
                     }).status(200).send({ auth: true, token: token, user: data.userName });
+                   }else{
+                    return res.cookie("adminJwt", token, {
+                        httpOnly: false,
+                        maxAge: 60*1000*10,
+                    }).status(200).send({ admin: true, message : 'Admin' });
+                   }
 
                 }else{
                     return res.send({userLogin : false,message : 'Password is invalid'})
@@ -86,10 +94,9 @@ module.exports = {
         })
     },
     postEditProfile: async (req, res) => {
-        console.log(req.body);
         const jwtToken = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET)
-        const userId = jwtToken.id
-        let user = await userCollection.findOne({ _id: userId })
+        const userId = jwtToken.data._id
+        let user = await userSchema.findOne({ _id: userId })
         if (!user) {
             res.status(500).send({ error: "no user" })
         } else {
@@ -97,18 +104,55 @@ module.exports = {
                 { _id: userId },
                 {
                     $set: {
+                        firstName : req.body.firstName,
+                        lastName : req.body.lastName,
+                        userName : req.body.userName,
                         image: req.body.image
                     }
-                }).then(() => {
+                }).then((err,data) => {
                     res.status(200).send({ changed: true })
                 })
         }
     },
-    logout : async(req,res)=>{
-        console.log(req.cookies.jwt)
-        res.clearCookie('jwt');
-        console.log(req.cookies.jwt)
+    postAddProduct : async(req,res)=>{
+        const {
+            name,
+            category,
+            price,
+            imageUrl,
+        }=req.body;
 
-        res.status(200).send({status:true})
+        const _product = new productSchema({
+            name,
+            category,
+            price,
+            image:imageUrl,
+            
+        }).save((err,data)=>{
+            if(err){
+                console.log(err)
+                return res.send({productAdd:false})
+            }
+            if(data){    
+                return res.status(200).send({ productAdd : true });      
+            }
+        })
+    },
+    getAllProducts : async(req,res)=>{
+        try {
+            let products = await productSchema.find({})
+            res.status(200).send({error:false,products:products})
+        } catch (error) {
+            res.status(400).send({error:true})
+        }
+    },
+    logout : async(req,res)=>{
+        const token = jwt.sign({data:'mukhthar'},process.env.JWT_SECRET,{expiresIn : 600});
+
+
+        res.cookie("jwt", token, {
+            httpOnly: false,
+            maxAge: 60*1000*10,
+        }).send({status:true})
     }
 }

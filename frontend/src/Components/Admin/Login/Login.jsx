@@ -1,35 +1,36 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './Login.css';
 import Axios from 'axios';
-import {user} from '../../api/api'
+import {user} from '../../../api/api'
 import { Link, useNavigate } from 'react-router-dom';
 import {useCookies} from 'react-cookie'
-import { AuthContext } from '../../contexts/userContext';
+import { AuthContext } from '../../../contexts/userContext';
+
 
 function Login() {
-  
-  const [cookies, setCookie] = useCookies(['jwt']);
+  const {setUserId} = useContext(AuthContext);
+  const [cookies, setCookie] = useCookies(['adminJwt']);
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
   const [error,setError] = useState('');
   const navigate = useNavigate()
-  const {setUserId} = useContext(AuthContext)
+  // const {userName,setUserName} = useContext(AuthContext)
   
   useEffect(() => {
-   
-    if(cookies.jwt){
-      navigate('/')
+    if(cookies.adminJwt){
+      navigate('/adminHome')  
     }
   }, [])
 
   const login=(e)=>{
     e.preventDefault();
     Axios.post(`${user}/login`,{email,password},{ withCredentials: true }).then((response)=>{
-    
+      console.log(response)
       if(response.data.auth){
-        console.log(response.data.user)
-        setUserId(response.data.user)
+        
         navigate('/')
+      }else if(response.data.admin){
+        navigate('/adminHome')
       }else{
         setError(response.data.message)
       }

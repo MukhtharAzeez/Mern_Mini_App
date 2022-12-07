@@ -20,6 +20,10 @@ router.get('/userProfile',userMiddleware.verifyToken,userController.getUserProfi
 
 router.post('/editProfilePhoto',userMiddleware.verifyToken,userController.postEditProfile)
 
-router.post('/logout',userController.logout)
+router.post('/addProduct',userMiddleware.verifyToken,userController.postAddProduct)
+
+router.get('/getAllProducts',userController.getAllProducts)
+
+router.get('/logout',userController.logout)
 
 module.exports = router;
